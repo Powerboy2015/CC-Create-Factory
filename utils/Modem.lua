@@ -18,19 +18,36 @@ function Modem:new(modemPeripheral)
     return obj
 end
 
-function Modem:listen(port, callback)
-    coroutine.create(function()
-        expect(1, port, "number")
-        expect(2, callback, "function")
-        self.modem.open(port)
-        while true do
-            local event, side, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
-            if senderChannel == port then
-                callback(message, senderChannel, replyChannel, senderDistance)
-            end
+-- ---@return nil
+-- ---@param port number
+-- ---@param callback function
+-- local function listenFunc(port, callback)
+--     expect(1, port, "number")
+--     expect(2, callback, "function")
+--     Modem.modem.open(port)
+--     while true do
+--         local event, side, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+--         if senderChannel == port then
+--             callback(message, senderChannel, replyChannel, senderDistance)
+--         end
+--     end
+-- end
+
+---@return nil
+---@param _port integer
+function Modem:listen(_port, _callback)
+    expect(2, _port, "number")
+    expect(3, _callback, "function")
+
+    self.modem.open(_port)
+    print("Modem listening on port " .. _port)
+    while true do
+        local _, side, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+        if senderChannel == _port then
+            -- print("message received on port " .. _port)
+            _callback(message, senderChannel, replyChannel, senderDistance)
         end
     end
-    )()
 end
 
 function Modem:send(port, message)

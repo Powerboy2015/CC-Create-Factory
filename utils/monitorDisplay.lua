@@ -7,9 +7,7 @@ local expect = require("cc.expect").expect
 ---@class MonitorDisplay
 ---@field monitor table
 ---@field defaultMessage string
-local MonitorDisplay = {
-    defaultMessage = "Inventory Contents:"
-}
+local MonitorDisplay = {}
 MonitorDisplay.__index = MonitorDisplay
 
 -- Finds monitor peripheral and initializes it
@@ -30,15 +28,14 @@ end
 function MonitorDisplay:clear()
     self.monitor.clear()
     self.monitor.setCursorPos(1, 1)
-    self.monitor.write(MonitorDisplay.defaultMessage)
 end
 
 -- prints text on the monitor and goes to the next line
 ---@return nil
 function MonitorDisplay:printLn(text)
     local _, y = self.monitor.getCursorPos()
-    self.monitor.setCursorPos(1, y + 1)
     self.monitor.write(text)
+    self.monitor.setCursorPos(1, y + 1)
 end
 
 function MonitorDisplay:size()
