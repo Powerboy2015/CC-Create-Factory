@@ -9,9 +9,9 @@
 local expect = require("cc.expect").expect
 
 ---@class InventoryObject
----@field inventoryPeripheral table
+---@field inventoryPeripheral inventory
 local InventoryObject = {
-    inventoryList = {}
+    inventoryList = {},
 }
 
 InventoryObject.__index = InventoryObject
@@ -21,7 +21,8 @@ InventoryObject.__index = InventoryObject
 ---@return InventoryObject
 function InventoryObject:new(inventoryPeripheral)
     expect(1, inventoryPeripheral, "string")
-    local inventory = peripheral.wrap(inventoryPeripheral) or error("Inventory peripheral not found", 0)
+    local inventory = peripheral.wrap(inventoryPeripheral) or ---@type inventory
+        error("Inventory peripheral not found", 0)
     local obj = {}
     setmetatable(obj, InventoryObject)
     obj.inventoryPeripheral = inventory
@@ -32,6 +33,11 @@ end
 ---@return nil
 function InventoryObject:updateItemList()
     local rawList = self.inventoryPeripheral.list()
+    if not rawList then
+        self.inventoryList = {}
+        return
+    end
+
     local parseItems = {}
     for _, item in pairs(rawList) do
         local parsedName = ParseName(item.name)

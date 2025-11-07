@@ -9,11 +9,9 @@ local inventorymonName = "right"
 local modemName = "back"
 local listenPort = 4321
 
-
 -- Initialize peripherals
 local Modem = require("utils.Modem")
 local monitorDisplay = require("utils.monitorDisplay")
-
 
 local modem = Modem:new(modemName)
 local InventoryMonitor = monitorDisplay:new(inventorymonName)

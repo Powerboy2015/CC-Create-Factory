@@ -3,6 +3,7 @@
 local expect = require("cc.expect").expect
 
 ---@class Modem
+---@field modem modem
 local Modem = {}
 Modem.__index = Modem
 
@@ -11,7 +12,9 @@ Modem.__index = Modem
 ---@
 function Modem:new(modemPeripheral)
     expect(1, modemPeripheral, "string")
-    local modem = peripheral.wrap(modemPeripheral) or error("Modem not found", 0)
+    local modem = peripheral.wrap(modemPeripheral) --[[@as modem]] or
+    error("No modem found with name" .. modemPeripheral)
+
     local obj = {}
     setmetatable(obj, Modem)
     obj.modem = modem
