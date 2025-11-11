@@ -9,23 +9,10 @@ function ParseName(_itemName)
     return string.gsub(removedPrefix, "_", " ")
 end
 
-local mixingStation = Station:new("create:basin")
+local mixingStation = Station:new("create:basin", "create:mixing")
 if mixingStation == nil then
     error("No station blocks found. Startup aborted.")
 end
 
----@param itemID string
-local function mixItem(itemID)
-    for _, machine in pairs(mixingStation.machineStates) do
-        if machine.state == "idle" then
-            local recipe = registry.getRecipesFor(itemID, "create:mixing")[1]
-            if recipe ~= nil then
-                print("Mixing item at machine: " .. machine.name)
-                machine.setRecipe(recipe)
-                machine.state = "active"
-            end
-        end
-    end
-end
-
-mixItem("create:andesite_alloy")
+local itemID = "create:andesite_alloy"
+mixingStation:create(itemID, registry)
